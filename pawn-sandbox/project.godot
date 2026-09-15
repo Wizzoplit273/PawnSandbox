@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="PawnSandbox"
+config/version="0.0"
 run/main_scene="uid://bjvvs26b02wxk"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
@@ -32,8 +33,14 @@ window/stretch/aspect="expand"
 [file_customization]
 
 folder_colors={
-"res://global/": "yellow"
+"res://global/": "yellow",
+"res://ingame/": "blue",
+"res://ui/": "green"
 }
+
+[gui]
+
+theme/custom="uid://bmy3j6gec87fo"
 
 [physics]
 
