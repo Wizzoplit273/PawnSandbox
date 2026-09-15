@@ -1,0 +1,183 @@
+[gd_scene format=3 uid="uid://dr7tpxjy0bg8m"]
+
+[ext_resource type="Texture2D" uid="uid://b30lmvq55t04o" path="res://ui/menu_texture.tres" id="1_l4sf2"]
+
+[sub_resource type="Gradient" id="Gradient_l4sf2"]
+offsets = PackedFloat32Array(0.12650603, 1)
+colors = PackedColorArray(0.4435309, 0.28589255, 0.1226631, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_l4sf2"]
+gradient = SubResource("Gradient_l4sf2")
+fill_from = Vector2(0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_l4sf2"]
+font_size = 15
+
+[node name="Lobby" type="Control" unique_id=1975376999]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="Container" type="HBoxContainer" parent="." unique_id=1897213965]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="Chat" type="TextureRect" parent="Container" unique_id=325549352]
+self_modulate = Color(0.3019608, 0.21176471, 0.07450981, 0.7529412)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("1_l4sf2")
+metadata/_edit_lock_ = true
+
+[node name="Container" type="VBoxContainer" parent="Container/Chat" unique_id=1100407870]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="Title" type="TextureRect" parent="Container/Chat/Container" unique_id=1529674166]
+self_modulate = Color(0.53700507, 0.38893574, 0.16486385, 1)
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_vertical = 0
+texture = SubResource("GradientTexture2D_l4sf2")
+expand_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="Container/Chat/Container/Title" unique_id=1331205085]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Chat"
+label_settings = SubResource("LabelSettings_l4sf2")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="TextContainer" type="RichTextLabel" parent="Container/Chat/Container" unique_id=1077083185]
+layout_mode = 2
+size_flags_vertical = 3
+text = "11:11:11 sample_user(IFJfw): Hi
+***: Global/System message"
+metadata/_edit_lock_ = true
+
+[node name="ChatInput" type="LineEdit" parent="Container/Chat/Container" unique_id=1640621235]
+layout_mode = 2
+placeholder_text = "Type a message..."
+metadata/_edit_lock_ = true
+
+[node name="Spacer" type="Control" parent="Container" unique_id=924735508]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="Container" type="VBoxContainer" parent="Container" unique_id=121856825]
+layout_mode = 2
+size_flags_horizontal = 3
+metadata/_edit_lock_ = true
+
+[node name="Console" type="TextureRect" parent="Container/Container" unique_id=843891972]
+self_modulate = Color(0.3019608, 0.21176471, 0.07450981, 0.7529412)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_l4sf2")
+metadata/_edit_lock_ = true
+
+[node name="Container" type="VBoxContainer" parent="Container/Container/Console" unique_id=523918453]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="Title" type="TextureRect" parent="Container/Container/Console/Container" unique_id=489832911]
+self_modulate = Color(0.53700507, 0.38893574, 0.16486385, 1)
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_vertical = 0
+texture = SubResource("GradientTexture2D_l4sf2")
+expand_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="Container/Container/Console/Container/Title" unique_id=1193361369]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Console"
+label_settings = SubResource("LabelSettings_l4sf2")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="TextContainer" type="RichTextLabel" parent="Container/Container/Console/Container" unique_id=1870205694]
+layout_mode = 2
+size_flags_vertical = 3
+text = "/help
+helping you now
+/download
+Downloading local game...
+Game successfully downloaded"
+metadata/_edit_lock_ = true
+
+[node name="ChatInput" type="LineEdit" parent="Container/Container/Console/Container" unique_id=703297240]
+layout_mode = 2
+placeholder_text = "Type a command..."
+metadata/_edit_lock_ = true
+
+[node name="Sessions" type="TextureRect" parent="Container/Container" unique_id=1732595472]
+self_modulate = Color(0.3019608, 0.21176471, 0.07450981, 0.7529412)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_l4sf2")
+metadata/_edit_lock_ = true
+
+[node name="Title" type="TextureRect" parent="Container/Container/Sessions" unique_id=1721596913]
+self_modulate = Color(0.53700507, 0.38893574, 0.16486385, 1)
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+size_flags_vertical = 0
+texture = SubResource("GradientTexture2D_l4sf2")
+expand_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="Container/Container/Sessions/Title" unique_id=382235458]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Players"
+label_settings = SubResource("LabelSettings_l4sf2")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true

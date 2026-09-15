@@ -41,9 +41,22 @@ border_blend = true
 shadow_color = Color(0.30323294, 0.3032328, 0.30323282, 0.65882355)
 shadow_size = 20
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l4sf2"]
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_joxlk"]
+bg_color = Color(0.22010207, 0.14657241, 0.020939475, 1)
+
 [resource]
 Button/font_sizes/font_size = 25
 Button/styles/focus = SubResource("StyleBoxFlat_3xb56")
 Button/styles/hover = SubResource("StyleBoxFlat_g1fjd")
 Button/styles/normal = SubResource("StyleBoxFlat_tsbh2")
 Button/styles/pressed = SubResource("StyleBoxFlat_6tukj")
+LineEdit/font_sizes/font_size = 14
+LineEdit/styles/focus = SubResource("StyleBoxFlat_l4sf2")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_joxlk")
