@@ -74,8 +74,6 @@ metadata/_edit_lock_ = true
 [node name="TextContainer" type="RichTextLabel" parent="Container/Chat/Container" unique_id=1077083185]
 layout_mode = 2
 size_flags_vertical = 3
-text = "11:11:11 sample_user(IFJfw): Hi
-***: Global/System message"
 metadata/_edit_lock_ = true
 
 [node name="ChatInput" type="LineEdit" parent="Container/Chat/Container" unique_id=1640621235]
@@ -137,11 +135,6 @@ metadata/_edit_lock_ = true
 [node name="TextContainer" type="RichTextLabel" parent="Container/Container/Console/Container" unique_id=1870205694]
 layout_mode = 2
 size_flags_vertical = 3
-text = "/help
-helping you now
-/download
-Downloading local game...
-Game successfully downloaded"
 metadata/_edit_lock_ = true
 
 [node name="ChatInput" type="LineEdit" parent="Container/Container/Console/Container" unique_id=703297240]
