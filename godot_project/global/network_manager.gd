@@ -6,22 +6,34 @@ signal peer_connected(id: int)
 signal peer_disconnected(id: int)
 signal packet_received(sender_id: int, data: PackedByteArray)
 
-enum PacketType {
-	JOIN_REQUEST = 0,
-	JOIN_ACCEPT = 1,
-	PEER_JOINED = 2,
-	PEER_LEFT = 3,
-	DATA = 4
-}
-
-enum Status {
-	OFFLINE = 0,
-	CLIENT = 1,
-	SERVER = 2
+## any packet's header should be 5 bytes(1 byte PacketType + 4 bytes sender/target peer or unused)
+enum PacketType {		  ## ---------------bytes to server----------------- : -----------------bytes to client-----------------
+	## connections
+	JOIN_REQUEST = 0,	  ## 1 byte	+ 4 bytes unused						 : -
+	JOIN_ACCEPT = 1,	  ## -												 : 1 byte + 4 bytes assigned peer
+	PEER_JOINED = 2,	  ## -												 : 1 byte + 4 bytes joined peer
+	PEER_LEFT = 3,		  ## -												 : 1 byte + 4 bytes left peer
+	HOST_LEFT = 4,		  ## -												 : 1 byte + 4 bytes left peer
+	## host
+	HOST_GRANT = 5,		  ## 1 byte + 4 bytes target peer					 : 1 byte + 4 bytes unused
+	## messaging
+	GLOBAL_CHAT = 6,	  ## 1 byte + 4 bytes unused	  + message payload	 : 1 byte + 4 bytes sender peer	  + message payload
+	PRIVATE_CHAT = 7,	  ## 1 byte + 4 bytes target peer + message payload  : 1 byte + 4 bytes sender peer	  + message payload
+	SYSTEM_CHAT = 8,	  ## 1 byte + 4 bytes unused	  + message payload	 : 1 byte + 4 bytes unused		  + message payload
+	## game flow
+	START_GAME = 9,		  ## 1 byte + 4 bytes unused						 : 1 byte + 4 bytes unused
+	END_GAME = 10,		  ## 1 byte + 4 bytes unused						 : 1 byte + 4 bytes unused
+	REGISTER_MOVE = 11,	  ## 1 byte + 4 bytes unused 	  + move payload	 : 1 byte + 4 bytes sender peer	  + move payload
+	OFFER_DRAW = 12,	  ## 1 byte + 4 bytes unused						 : 1 byte + 4 bytes sender peer
+	RESIGN = 13,		  ## 1 byte + 4 bytes unused						 : 1 byte + 4 bytes sender peer
+	## peer configuration
+	ASSIGN_USERNAME = 14, ## 1 byte + 4 bytes target peer + username payload : 1 byte + 4 bytes unused		  + username payload
+	ASSIGN_TEAM = 15,	  ## 1 byte + 4 bytes target peer + team payload	 : 1 byte + 4 bytes unused		  + team payload
 }
 
 const OFFLINE_ID: int = 0
-const SERVER_ID: int = 1
+const RELAY_ID: int = 0
+const HOST_ID: int = 1
 const BROADCAST_ID: int = 0
 
 const MAX_PACKETS_PER_FRAME: int = 50
@@ -31,7 +43,7 @@ var peer_packet_counts: Dictionary = {} ## sender_id -> packet count each time i
 var rate_limit_timer: float = 0.0 ## in seconds
 
 var socket := WebSocketPeer.new()
-var connected_status := Status.OFFLINE
+var is_online := false
 var my_id: int = OFFLINE_ID
 var peers: PackedInt32Array = []
 var relay_connected := false
@@ -39,14 +51,8 @@ var relay_connected := false
 func _enter_tree() -> void:
 	set_process(false)
 
-func start_server(url: String) -> void:
-	connected_status = Status.SERVER
-	my_id = SERVER_ID
-	peers.clear()
-	connect_to_relay(url)
-
 func start_client(url: String) -> void:
-	connected_status = Status.CLIENT
+	is_online = true
 	my_id = OFFLINE_ID
 	peers.clear()
 	connect_to_relay(url)
@@ -81,10 +87,10 @@ func _process(delta: float) -> void:
 	if state == WebSocketPeer.STATE_OPEN:
 		if not relay_connected:
 			relay_connected = true
-			if connected_status == Status.SERVER: connected_to_server.emit()
+			if my_id == HOST_ID: connected_to_server.emit() # ???
 			else:
 				# Ask the host to acknowledge our connection
-				send_internal(PacketType.JOIN_REQUEST, SERVER_ID)
+				send_internal(PacketType.JOIN_REQUEST, HOST_ID)
 		var processed_packet_count: int = 0
 		while socket.get_available_packet_count() > 0 and processed_packet_count < MAX_PACKETS_PER_FRAME:
 			handle_raw_packet(socket.get_packet())
@@ -117,7 +123,7 @@ func handle_raw_packet(packet: PackedByteArray) -> void:
 	var payload := packet.slice(9)
 	match type:
 		PacketType.JOIN_REQUEST:
-			if connected_status != Status.SERVER: return
+			if my_id == HOST_ID: return
 			#if sender_id in peers: return
 			var assign_id: int = generate_unique_id()
 			peers.append(assign_id)
@@ -132,9 +138,8 @@ func handle_raw_packet(packet: PackedByteArray) -> void:
 			send_internal(PacketType.PEER_JOINED, BROADCAST_ID, join_message.data_array)
 			peer_connected.emit(assign_id)
 		PacketType.JOIN_ACCEPT:
-			if connected_status != Status.CLIENT: return
 			if my_id != OFFLINE_ID: return
-			peers.append(SERVER_ID)
+			peers.append(HOST_ID)
 			var player_buffer := StreamPeerBuffer.new()
 			player_buffer.data_array = payload
 			var peer_count := player_buffer.get_32()
@@ -155,9 +160,3 @@ func handle_raw_packet(packet: PackedByteArray) -> void:
 				peers.erase(left_peer)
 				peer_disconnected.emit(left_peer)
 		PacketType.DATA: packet_received.emit(sender_id, payload)
-
-func generate_unique_id() -> int:
-	if connected_status != Status.SERVER: return 0
-	var new_id := randi_range(SERVER_ID + 1, INT32_MAX)
-	while new_id in peers: new_id = randi_range(SERVER_ID + 1, INT32_MAX)
-	return new_id
