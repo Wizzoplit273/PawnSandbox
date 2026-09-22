@@ -74,6 +74,22 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 0.1
 metadata/_edit_lock_ = true
 
+[node name="ProfileSettingsButton" type="Button" parent="Container" unique_id=1745257752]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+text = "Profile
+Settings"
+metadata/_edit_lock_ = true
+
+[node name="Spacer4" type="Control" parent="Container" unique_id=2048631617]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+metadata/_edit_lock_ = true
+
 [node name="DownloadButton" type="Button" parent="Container" unique_id=1399901732]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -84,7 +100,7 @@ text = "Download
 Local Game"
 metadata/_edit_lock_ = true
 
-[node name="Spacer4" type="Control" parent="Container" unique_id=119674569]
+[node name="Spacer5" type="Control" parent="Container" unique_id=1495888446]
 layout_mode = 2
 size_flags_vertical = 3
 metadata/_edit_lock_ = true
