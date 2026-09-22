@@ -177,15 +177,29 @@ func handle_raw_packet(packet: PackedByteArray) -> void:
 			peers.erase(1)
 			peers.append(sender_id)
 			host_grant.emit()
-		PacketType.GLOBAL_CHAT: return
-		PacketType.PRIVATE_CHAT: return
-		PacketType.SYSTEM_CHAT: return
-		PacketType.START_GAME: return
-		PacketType.END_GAME: return
+		PacketType.GLOBAL_CHAT:
+			var message: String = bytes_to_var(payload)
+			global_chat.emit(sender_id, message)
+		PacketType.PRIVATE_CHAT:
+			var message: String = bytes_to_var(payload)
+			private_chat.emit(sender_id, message)
+		PacketType.SYSTEM_CHAT:
+			var message: String = bytes_to_var(payload)
+			system_chat.emit(message)
+		PacketType.START_GAME: start_game.emit()
+		PacketType.END_GAME: end_game.emit()
 		PacketType.REGISTER_MOVE: return
-		PacketType.OFFER_DRAW: return
-		PacketType.RESIGN: return
-		PacketType.ASSIGN_TEAM: return
-		PacketType.SET_USERNAME: return
-		PacketType.SET_ICON: return
-		PacketType.SET_COLOR: return
+		PacketType.OFFER_DRAW: offer_draw.emit(sender_id)
+		PacketType.RESIGN: resign.emit(sender_id)
+		PacketType.ASSIGN_TEAM:
+			var team: int = bytes_to_var(payload)
+			assign_team.emit(sender_id, team)
+		PacketType.SET_USERNAME:
+			var username: String = bytes_to_var(payload)
+			set_username.emit(sender_id, username)
+		PacketType.SET_ICON:
+			var icon_code: int = bytes_to_var(payload)
+			set_icon.emit(sender_id, icon_code)
+		PacketType.SET_COLOR:
+			var color: Vector3 = bytes_to_var(payload)
+			set_color.emit(sender_id, color)

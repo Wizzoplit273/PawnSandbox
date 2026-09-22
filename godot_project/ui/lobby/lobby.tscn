@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dr7tpxjy0bg8m"]
 
 [ext_resource type="Texture2D" uid="uid://b30lmvq55t04o" path="res://ui/menu_texture.tres" id="1_l4sf2"]
+[ext_resource type="Script" uid="uid://kd6ds3eugchw" path="res://ui/lobby/lobby.gd" id="1_rdn6r"]
 
 [sub_resource type="Gradient" id="Gradient_l4sf2"]
 offsets = PackedFloat32Array(0.12650603, 1)
@@ -21,6 +22,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+script = ExtResource("1_rdn6r")
 metadata/_edit_lock_ = true
 
 [node name="Container" type="HBoxContainer" parent="." unique_id=1897213965]
@@ -71,12 +73,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_lock_ = true
 
-[node name="TextContainer" type="RichTextLabel" parent="Container/Chat/Container" unique_id=1077083185]
+[node name="ChatLabel" type="RichTextLabel" parent="Container/Chat/Container" unique_id=1077083185]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 metadata/_edit_lock_ = true
 
 [node name="ChatInput" type="LineEdit" parent="Container/Chat/Container" unique_id=1640621235]
+unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Type a message..."
 metadata/_edit_lock_ = true
@@ -174,3 +178,5 @@ label_settings = SubResource("LabelSettings_l4sf2")
 horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_lock_ = true
+
+[connection signal="text_submitted" from="Container/Chat/Container/ChatInput" to="." method="_on_chat_input_text_submitted"]

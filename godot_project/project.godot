@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="PawnSandbox"
-config/version="0.1"
+config/version="0.2"
 run/main_scene="uid://bjvvs26b02wxk"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 boot_splash/bg_color=Color(0.2685725, 0.17554647, 0.080112316, 1)
