@@ -9,5 +9,8 @@ func append_message(sender_id: int, message: String) -> void:
 
 func _on_chat_input_text_submitted(new_text: String) -> void:
 	%ChatInput.clear()
+	if new_text.begins_with("/"):
+		ConsoleManager.execute_raw_string(new_text)
+		return
 	append_message(NetworkManager.my_id, new_text)
 	UIManager.send_network_message(0, new_text)

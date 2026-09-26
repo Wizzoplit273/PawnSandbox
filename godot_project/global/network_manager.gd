@@ -71,14 +71,21 @@ var my_id: int = OFFLINE_ID
 var peers: PackedInt32Array = []
 var relay_connected := false
 
+var input_url: String = "ws://localhost:8080"
+
+func set_url(new_url: String) -> void:
+	input_url = new_url
+
+func get_url() -> String: return input_url
+
 func _enter_tree() -> void:
 	set_process(false)
 
-func start_client(url: String) -> void:
+func start_client() -> void:
 	is_online = true
 	my_id = OFFLINE_ID
 	peers.clear()
-	connect_to_relay(url)
+	connect_to_relay()
 
 func leave_server() -> void:
 	#if relay_connected: send_data(PacketType.PEER_LEFT, BROADCAST_ID) # ???
@@ -88,10 +95,13 @@ func leave_server() -> void:
 	my_id = OFFLINE_ID
 	set_process(false)
 
-func connect_to_relay(url: String) -> void:
+func connect_to_relay() -> void:
 	relay_connected = false
-	var err := socket.connect_to_url(url)
-	if err == OK: set_process(true)
+	var err := socket.connect_to_url(input_url)
+	UIManager.send_local_message("Connecting to server...")
+	if err == OK:
+		set_process(true)
+		UIManager.send_local_message("Successful, waiting for welcome packet...")
 	else: UIManager.send_local_message("Error: Failed to initialize connection")
 
 func process_rate_limit(delta: float) -> void:

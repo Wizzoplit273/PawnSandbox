@@ -104,3 +104,5 @@ metadata/_edit_lock_ = true
 layout_mode = 2
 size_flags_vertical = 3
 metadata/_edit_lock_ = true
+
+[connection signal="pressed" from="Container/JoinButton" to="." method="_on_join_button_pressed"]
