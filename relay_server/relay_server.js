@@ -1,5 +1,16 @@
+const http = require('http');
 const WebSocket = require('ws');
-const ws_server = new WebSocket.Server({ port: 8080 });
+
+// PORT assigned by hosting environment or default to 8080
+const PORT = process.env.PORT || 8080;
+
+// HTTP server for health checks
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('WebSocket relay server is active.');
+});
+
+const ws_server = new WebSocket.Server({ server });
 
 const PacketType = Object.freeze({
     JOIN_REQUEST: 0,
@@ -28,9 +39,9 @@ let nextPeerId = 1;
 
 const PACKET_HEADER_SIZE = 5
 
-function broadcast(senderId, data) {
+function broadcast(exceptId, data) {
     clients.forEach((clientWs, id) => {
-        if (id !== senderId && clientWs.readyState === WebSocket.OPEN) {
+        if (id !== exceptId && clientWs.readyState === WebSocket.OPEN) {
             clientWs.send(data);
         }
     });
@@ -75,7 +86,7 @@ ws_server.on('connection', (ws) => {
             const joinedBuf = Buffer.alloc(PACKET_HEADER_SIZE);
             joinedBuf.writeUInt8(PacketType.PEER_JOINED, 0);
             joinedBuf.writeInt32BE(peerId, 1);
-            broadcast(joinedBuf, peerId);
+            broadcast(peerId, joinedBuf);
             return;
         }
         if (!ws.hasJoined) return;
@@ -106,12 +117,12 @@ ws_server.on('connection', (ws) => {
             case PacketType.END_GAME:
                 if (ws.peerId !== 1) return;
                 broadcast(1, data);
-            
+            	break;
             case PacketType.REGISTER_MOVE:
             case PacketType.OFFER_DRAW:
             case PacketType.RESIGN:
                 broadcast(ws.peerId, data);
-            
+            	break;
             default: return;
         }
     });
@@ -130,4 +141,8 @@ ws_server.on('connection', (ws) => {
         }
         broadcast(ws.peerId, leftBuf);
     });
+});
+
+server.listen(PORT, () => {
+    console.log(`Relay server running on port ${PORT}`);
 });
