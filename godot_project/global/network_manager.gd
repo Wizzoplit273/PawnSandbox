@@ -15,7 +15,7 @@ signal end_game()
 signal register_move(sender_id: int, move: Variant) ## idk the move's type for now
 signal offer_draw(sender_id: int)
 signal resign(sender_id: int)
-signal assign_team(target_id: int, team: int)
+signal set_team(target_id: int, team: int)
 signal set_username(target_id: int, username: String)
 signal set_icon(target_id: int, icon_code: int)
 signal set_color(target_id: int, color: Vector3)
@@ -43,7 +43,7 @@ enum PacketType {		  ## ---------------bytes to server----------------- : ------
 	OFFER_DRAW = 13,	  ## 1 byte + 4 bytes unused						 : 1 byte + 4 bytes sender peer
 	RESIGN = 14,		  ## 1 byte + 4 bytes unused						 : 1 byte + 4 bytes sender peer
 	## peer lobby
-	ASSIGN_TEAM = 15,	  ## 1 byte + 4 bytes target peer + team payload	 : 1 byte + 4 bytes target peer	   + team payload
+	SET_TEAM = 15,	  ## 1 byte + 4 bytes target peer + team payload	 : 1 byte + 4 bytes target peer	   + team payload
 	## peer profile
 	SET_USERNAME = 16,	  ## 1 byte + 4 bytes target peer + username payload : 1 byte + 4 bytes target peer	   + username payload
 	SET_ICON = 17,		  ## 1 byte + 4 bytes target peer + 1 byte enum		 : 1 byte + 4 bytes target peer	   + 1 byte enum
@@ -92,7 +92,7 @@ func connect_to_relay(url: String) -> void:
 	relay_connected = false
 	var err := socket.connect_to_url(url)
 	if err == OK: set_process(true)
-	else: printerr("Failed to initialize WebSocket connection")
+	else: UIManager.send_local_message("Error: Failed to initialize connection")
 
 func process_rate_limit(delta: float) -> void:
 	rate_limit_timer += delta
@@ -191,9 +191,9 @@ func handle_raw_packet(packet: PackedByteArray) -> void:
 		PacketType.REGISTER_MOVE: return
 		PacketType.OFFER_DRAW: offer_draw.emit(sender_id)
 		PacketType.RESIGN: resign.emit(sender_id)
-		PacketType.ASSIGN_TEAM:
+		PacketType.SET_TEAM:
 			var team: int = bytes_to_var(payload)
-			assign_team.emit(sender_id, team)
+			set_team.emit(sender_id, team)
 		PacketType.SET_USERNAME:
 			var username: String = bytes_to_var(payload)
 			set_username.emit(sender_id, username)

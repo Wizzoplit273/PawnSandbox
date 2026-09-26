@@ -98,6 +98,7 @@ size_flags_horizontal = 3
 metadata/_edit_lock_ = true
 
 [node name="Console" type="TextureRect" parent="Container/Container" unique_id=843891972]
+visible = false
 self_modulate = Color(0.3019608, 0.21176471, 0.07450981, 0.7529412)
 layout_mode = 2
 size_flags_horizontal = 3
